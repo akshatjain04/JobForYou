@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>JobFitt</title>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+        <!--Plotly-->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <!--D3-->
+        <script src="https://d3js.org/d3.v3.min.js"></script>
+
+        <style>
+        body{
+            background-color: #F7F9F9;
+        }
+        footer{
+            background-color: #343a40!important;
+            color:white;
+            text-align: center;
+        }
+        #best_job{
+          text-align: center;
+          font-style: italic;
+          font-variant: small-caps;
+        }
+        #result_map{
+        height:500px;
+        }
+        #result_bar_plot{
+        height:300px;
+        }
+        
+        #nav_main{
+        margin-bottom: 50px;
+        }
+        #main_content{
+        margin-top: 200px;
+        }
+        #line_salary{
+        width: 100%;
+        height: 550px;
+        padding: 20px;
+        }
+        .row_style{
+        margin-bottom:40px; 
+        }
+        </style>
+
+    </head>
+
+    <body >
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top " id="nav_main">
+        <div class="container">
+            <a class="navbar-brand" href="#">JobFitt Results</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                <a class="nav-link" href="/index">Home
+                </a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/survey">Find Job Titles</a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" href="/trends">Trends</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/data">Data</a>
+                </li>
+            </ul>
+            </div>
+        </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container" id="main_content" >
+            <div style='position:absolute;z-index:0;left:0;top:0;width:100%;height:100%'>
+            <!--<img src='../static/img/portfolio-1.jpg' style='width:100%;height:100%' alt='[]' />-->
+            </div>
+
+            <!-- Page Heading -->
+            <!-- PERFECT JOB TITLE-->
+            <h1 style="text-align:center;font-weight:bold;">Your Results:</h1>
+            <h2 class="my-4" id="best_job"> </h2>
+            
+            <div class="row row_style">
+                <!--TOP JOB TITLES AS PER SKILLS-->
+                <div class="col-sm-6 col-md-6 col-lg-6" style="padding:20px;">
+                <div class="card-img-top">
+                    <div class="card-body">
+                    <div class="card h-100">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                              <h4 class="card-title" style="text-align: center">Job Titles that fit your skills and education</h4>
+                            </div>
+                        </div>
+                        <p class="card-text" id="best_fit"></p>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <!--BAR CHART-->
+                <div class="col-sm-6 col-md-6 col-lg-6" style="border:5px black">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <h4 style="text-align: center;">Titles Vs Salary(2017)</h4>
+                        </div>
+                        <div id="result_bar_plot"></div>
+                    </div>
+                </div>
+            </div>
+            <!--Ensure that even for Titles reyurned 3 or less, the charts dont overlap  -->
+            <div class="row row_style">
+                <p></p>
+                <p></p>
+            </div>
+            <div class="row row_style">
+                <!--LINE CHART-->
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <h4 style="text-align: center">Trend in Salary from 2015-2017</h4>
+                            </div>
+                            </div>
+                        <div id="line_salary"></div> 
+                </div>
+            </div>
+
+            <div class="row row_style">
+                <!--MAP-->
+                <div class="col-sm-12 col-md-12 col-lg-12">   
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                        <h4 style="text-align: center">Salaries across different States</h4>
+                        </div>
+                    </div>
+                    
+                    <!--DROPDOWN FOR Map Filter-->
+                    <div class="panel panel-primary dropdown" style="text-align:right;">
+                        <div class="panel-heading" style="padding-right: 15px;">
+                            <h6>Select Title</h6>
+                        </div>
+                        <div class="panel-body">
+                            <select id="selTitle" aria-placeholder="Select Title" onchange="PlotMap(this.value)">
+                            </select>
+                        </div>
+                    </div>
+                    <div id="result_map"></div>
+                </div>
+            </div>
+        </div>
+        <!--Footer-->
+        <footer class="sticky-footer">
+            <div class="footer-social">
+                <div class="container text-center" style:"font-size:40px;">
+                    <i class="fa fa-github" ></i>
+                    <a href="https://github.com/anukhandelwal/jobfit"> JobFitt Git Repository</a>
+                </div>
+            </div>
+            <div class="footer-main" style="color:#fff;">
+                <div class="container text-center">
+                    <small>Copyright &copy; Rutgers Athena Team 2018-2020</small>
+                </div>
+            </div>
+        </footer>
+
+        <!--JQUERY Script-->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        <!--BOOTSTRAP Script-->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+        <!--Custom JavaScript-->
+        <script src="static/js/result.js"></script>
+    </body>
+</html>
